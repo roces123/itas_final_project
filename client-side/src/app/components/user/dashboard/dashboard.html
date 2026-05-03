@@ -1,0 +1,69 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Simple Top Nav for Student -->
+  <nav class="bg-blue-700 text-white p-4 shadow-md">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <h1 class="font-bold text-lg">ISUFST Student Portal</h1>
+      <button (click)="onLogout()" class="text-sm bg-blue-800 px-3 py-1 rounded hover:bg-blue-900">Logout</button>
+    </div>
+  </nav>
+
+  <main class="max-w-6xl mx-auto p-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Left: Request Form (Action Area) -->
+      <div class="lg:col-span-1 space-y-6">
+        <div class="bg-white p-6 rounded-xl shadow-sm border">
+          <h2 class="text-xl font-bold text-gray-800 mb-4">New Request</h2>
+          <form class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Document Type</label>
+              <select class="mt-1 block w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500">
+                <option>Transcript of Records (TOR)</option>
+                <option>Certificate of Good Moral</option>
+                <option>Honorable Dismissal</option>
+                <option>Certification of Grades</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Purpose</label>
+              <textarea class="mt-1 block w-full border rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500" rows="3" placeholder="e.g. For employment, scholarship, etc."></textarea>
+            </div>
+            <button type="button" class="w-full bg-green-600 text-white font-bold py-2 rounded-md hover:bg-green-700 transition">
+              Submit Request
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right: Request Timeline (Status Area) -->
+      <div class="lg:col-span-2">
+        <div class="bg-white p-6 rounded-xl shadow-sm border">
+          <h2 class="text-xl font-bold text-gray-800 mb-4">My Requests</h2>
+          
+          <!-- Sample Timeline Item -->
+          <div class="space-y-6">
+            <div *ngFor="let req of myRequests" class="relative pl-8 pb-6 border-l-2 border-blue-200 last:border-0">
+              <!-- Dot indicator -->
+              <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full" 
+                   [ngClass]="req.status === 'Ready' ? 'bg-green-500' : 'bg-blue-500'"></div>
+              
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="font-bold text-gray-800">{{req.document}}</h3>
+                  <p class="text-sm text-gray-500">Requested on: {{req.date}}</p>
+                  <p class="text-sm mt-2 text-gray-600 italic">"{{req.remarks}}"</p>
+                </div>
+                <span class="px-3 py-1 rounded-full text-xs font-bold"
+                      [ngClass]="req.status === 'Ready' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'">
+                  {{req.status}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
