@@ -1,21 +1,9 @@
 import {
   AppCheckInstances,
   AuthInstances
-} from "./chunk-S3B3F6QH.js";
-import {
-  Component as Component2,
-  FirebaseError as FirebaseError2,
-  LogLevel as LogLevel2,
-  Logger as Logger2,
-  SDK_VERSION as SDK_VERSION2,
-  _isFirebaseServerApp as _isFirebaseServerApp2,
-  _registerComponent as _registerComponent2,
-  getModularInstance as getModularInstance2,
-  getUA as getUA2,
-  isCloudWorkstation as isCloudWorkstation2,
-  isSafari as isSafari2,
-  registerVersion as registerVersion2
-} from "./chunk-TF4KM7WT.js";
+} from "./chunk-MYGMHRMF.js";
+import "./chunk-RZFC5GCY.js";
+import "./chunk-ABTJWV2K.js";
 import {
   Component,
   FirebaseApp,
@@ -47,10 +35,7 @@ import {
   ɵgetAllInstancesOf,
   ɵgetDefaultInstanceOf,
   ɵzoneWrap
-} from "./chunk-UBSJ2UZL.js";
-import "./chunk-JS7UPFDT.js";
-import "./chunk-GUNZMJEF.js";
-import "./chunk-QGRCOFW5.js";
+} from "./chunk-INSDH5EI.js";
 import {
   InjectionToken,
   Injector,
@@ -61,7 +46,7 @@ import {
   setClassMetadata,
   ɵɵdefineInjector,
   ɵɵdefineNgModule
-} from "./chunk-C3ZYHOKX.js";
+} from "./chunk-VV7GRO6J.js";
 import {
   Observable,
   concatMap,
@@ -75,7 +60,23 @@ import {
   scan,
   startWith,
   timer
-} from "./chunk-JI2ZN7O6.js";
+} from "./chunk-U5BGXTXY.js";
+import "./chunk-B2KI3AIV.js";
+import {
+  Component as Component2,
+  FirebaseError as FirebaseError2,
+  LogLevel as LogLevel2,
+  Logger as Logger2,
+  SDK_VERSION as SDK_VERSION2,
+  _isFirebaseServerApp as _isFirebaseServerApp2,
+  _registerComponent as _registerComponent2,
+  getModularInstance as getModularInstance2,
+  getUA as getUA2,
+  isCloudWorkstation as isCloudWorkstation2,
+  isSafari as isSafari2,
+  registerVersion as registerVersion2
+} from "./chunk-TF4KM7WT.js";
+import "./chunk-JS7UPFDT.js";
 import {
   __spreadValues
 } from "./chunk-GOMI4DH3.js";

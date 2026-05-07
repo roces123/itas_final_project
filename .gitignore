@@ -10,3 +10,9 @@ server-side/node_modules/
 client-side/src/environments/environment.ts
 client-side/src/environments/environment.development.ts
 client-side/src/environments/environment.prod.ts
+
+.angular/
+node_modules/
+.env
+dist/
+.tsbuildinfo

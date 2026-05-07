@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LoadingService } from './services/loading.services';
-import { AuthService } from './services/auth.services'; // Dagdag ito
+import { AuthService } from './services/auth.services'; 
 
 @Component({
   selector: 'app-root',

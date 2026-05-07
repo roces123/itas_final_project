@@ -4,7 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms'; 
 import { Firestore, collection, query, where, onSnapshot, orderBy } from '@angular/fire/firestore';
 import { Auth, signOut } from '@angular/fire/auth';
-import { RequestService } from '../../../services/request.services'; // Siguraduhing tama ang path
+import { RequestService } from '../../../services/request.services';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -16,7 +16,7 @@ export class UserDashboard implements OnInit, OnDestroy {
   private firestore = inject(Firestore);
   private auth = inject(Auth);
   private router = inject(Router);
-  private requestService = inject(RequestService); // Inject service para sa CRUD
+  private requestService = inject(RequestService);
 
   userName: string = '';
   requests: any[] = [];
@@ -64,13 +64,17 @@ export class UserDashboard implements OnInit, OnDestroy {
 
   // --- CRUD OPERATIONS ---
 
-  // Bubuksan ang modal para sa pag-edit
+  // Helper function para sa button state
+  canAction(request: any): boolean {
+    const status = (request.status || 'pending').toLowerCase();
+    return status === 'pending';
+  }
+
   openEditModal(request: any) {
-    if (request.status !== 'Pending') {
+    if (!this.canAction(request)) {
       alert('Only pending requests can be edited.');
       return;
     }
-    // Gawa tayo ng copy para hindi agad magbago ang nasa table habang nag-e-edit
     this.selectedRequest = { ...request };
     this.isEditModalOpen = true;
   }
@@ -80,7 +84,6 @@ export class UserDashboard implements OnInit, OnDestroy {
     this.selectedRequest = null;
   }
 
-  // Tatawag sa ating bagong PUT endpoint
   saveRequestEdit() {
     if (!this.selectedRequest) return;
 
@@ -96,36 +99,34 @@ export class UserDashboard implements OnInit, OnDestroy {
     });
   }
 
-  // Tatawag sa ating DELETE endpoint (Cancel)
   cancelRequest(request: any) {
-    if (request.status !== 'Pending') {
+    if (!this.canAction(request)) {
       alert('Cannot cancel a request that is already in progress.');
       return;
     }
 
     if (confirm('Are you sure you want to cancel this request?')) {
       this.requestService.cancelRequest(request.id).subscribe({
-        next: () => {
-          alert('Request cancelled.');
-        },
+        next: () => alert('Request cancelled.'),
         error: (err) => alert('Cancel failed: ' + err.message)
       });
     }
   }
 
-  // --- EXISTING LOGIC (Filters, Pagination, etc.) ---
+  // --- EXISTING LOGIC ---
 
   applyFilters() {
     this.filteredRequests = this.requests.filter(req => {
       const search = this.searchText.toLowerCase().trim();
-      const docType = (req.documentType || '').toLowerCase(); // Inayos ko from docType to documentType
+      const docType = (req.docType || req.documentType || '').toLowerCase();
       const requestId = (req.id || '').toLowerCase();
       
       const matchesSearch = search === '' || 
                             docType.includes(search) || 
                             requestId.includes(search);
 
-      const matchesDoc = this.filterDocType === '' || req.documentType === this.filterDocType;
+      const matchesDoc = this.filterDocType === '' || 
+                         (req.docType === this.filterDocType || req.documentType === this.filterDocType);
       
       return matchesSearch && matchesDoc;
     });
@@ -168,7 +169,7 @@ export class UserDashboard implements OnInit, OnDestroy {
 
   async onLogout() {
     if (confirm('Are you sure you want to sign out, ISUFSTian?')) {
-      localStorage.clear(); // Isinama ko na para malinis ang Remember Me/Tokens
+      localStorage.clear();
       await signOut(this.auth);
       this.router.navigate(['/login']);
     }

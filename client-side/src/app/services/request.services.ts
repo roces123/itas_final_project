@@ -20,9 +20,9 @@ export class RequestService {
     return this.http.post(this.apiUrl, completePayload);
   }
 
-  // Para sa Student Edit
+  // FIXED: Tinanggal ang '/student' para mag-match sa backend route
   updateStudentRequest(id: string, data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/student/${id}`, data);
+    return this.http.put(`${this.apiUrl}/${id}`, data);
   }
 
   getMyRequests(): Observable<any[]> {

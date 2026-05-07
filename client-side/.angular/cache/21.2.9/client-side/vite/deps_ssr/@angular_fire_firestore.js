@@ -2,7 +2,8 @@ import { createRequire } from 'module';const require = createRequire(import.meta
 import {
   AppCheckInstances,
   AuthInstances
-} from "./chunk-22XRH24L.js";
+} from "./chunk-RZMBXJOE.js";
+import "./chunk-QOFZYVNL.js";
 import {
   Component as Component2,
   FirebaseError as FirebaseError2,

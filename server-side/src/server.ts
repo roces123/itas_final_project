@@ -8,7 +8,7 @@ import requestRoutes from './routes/request.routes';
 import { setupSwagger } from './swagger'; 
 import { supabase } from './config/supabase';
 import { authenticateToken } from './middleware/auth.middleware';
-import { authorizeRole } from './middleware/role.middleware'; // <--- Siguraduhing naka-import ito
+import { authorizeRole } from './middleware/role.middleware';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
@@ -16,11 +16,40 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
+
+// Dynamic PORT for Deployment
+const PORT = process.env.PORT || 3000;
+
+// Dynamic CORS Configuration
+const allowedOrigins = [
+  "http://localhost:4200", // Para sa local development
+  process.env.FRONTEND_URL  // Dito papasok yung Vercel/Netlify URL niyo balang araw
+];
+
 const io = new Server(server, {
-    cors: { origin: "http://localhost:4200" }
+    cors: { 
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        methods: ["GET", "POST"]
+    }
 });
 
-app.use(cors());
+// Middleware setup
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
 app.use(express.json());
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -28,16 +57,15 @@ const upload = multer({ storage: multer.memoryStorage() });
 /**
  * @openapi
  * /api/upload:
- *   post:
- *     summary: Upload a file to Supabase Storage
- *     tags: [File Upload]
- *     security:
- *       - bearerAuth: []
+ * post:
+ * summary: Upload a file to Supabase Storage
+ * tags: [File Upload]
+ * security:
+ * - bearerAuth: []
  */
-// UPDATE DITO: Idinagdag natin ang authorizeRole(['student', 'admin'])
 app.post('/api/upload', 
   authenticateToken, 
-  authorizeRole(['student', 'admin']), // <--- Papayagan na si KC at Julianne (students)
+  authorizeRole(['student', 'admin']), 
   upload.single('file'), 
   async (req: any, res: any) => {
     try {
@@ -66,26 +94,32 @@ app.post('/api/upload',
     }
 });
 
-// Helper para sa inyong testing session (In-update para sa student testing)
+// Helper para sa testing session
 app.get('/api/get-student-token', (req, res) => {
     const token = jwt.sign(
-        { id: 101, role: 'student' }, // Testing as student
+        { id: 101, role: 'student' }, 
         process.env.JWT_SECRET as string, 
         { expiresIn: '1h' }
     );
     res.json({ token });
 });
 
+// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/requests', requestRoutes);
 
+// Documentation
 setupSwagger(app);
 
+// Socket.io connection logic
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
 });
 
-server.listen(3000, () => {
-    console.log('🚀 Server running on http://localhost:3000');
-    console.log('📄 Swagger Docs available at http://localhost:3000/api-docs');
+// Start the server
+server.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    if (process.env.NODE_ENV !== 'production') {
+        console.log(`📄 Swagger Docs: http://localhost:${PORT}/api-docs`);
+    }
 });

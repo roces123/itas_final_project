@@ -1,19 +1,16 @@
 <div class="min-h-screen bg-[#0f172a] p-4 md:p-8 font-sans text-slate-200">
   <div class="max-w-5xl mx-auto bg-[#1e293b] rounded-[3rem] shadow-2xl border border-slate-800 overflow-hidden">
     
-    <!-- Error State -->
     <div class="px-10 py-4 bg-red-900 text-white text-sm" *ngIf="!isLoading && errorMessage">
       <p>{{ errorMessage }}</p>
       <p>Request ID: {{ requestId }}</p>
       <p>Status: {{ selectedRequest ? 'Loaded' : 'Not Loaded' }}</p>
     </div>
 
-    <!-- Loading State -->
     <div *ngIf="isLoading" class="flex items-center justify-center min-h-screen">
       <div class="text-white text-xl">Loading request data...</div>
     </div>
 
-    <!-- Main Content -->
     <div *ngIf="!isLoading && selectedRequest">
     
     <div class="px-10 py-8 flex justify-between items-center border-b border-slate-800/50">
@@ -90,6 +87,18 @@
         </section>
 
         <section>
+          <h3 class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-6 ml-2">Admin Remarks / Instructions</h3>
+          <div class="bg-slate-900/50 border border-slate-800 p-6 rounded-[2rem]">
+            <textarea 
+              [(ngModel)]="adminRemarks" 
+              rows="4" 
+              placeholder="Add instructions (e.g. Please bring your student ID when claiming)..."
+              class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl p-4 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none">
+            </textarea>
+          </div>
+        </section>
+
+        <section>
           <h3 class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-6 ml-2">Upload Result File</h3>
           <div class="bg-slate-900/50 border border-slate-800 p-8 rounded-[2rem] space-y-4">
             <input type="file" (change)="onFileSelected($event)" 
@@ -106,5 +115,4 @@
       </div>
     </div>
   </div>
-</div>
 </div>

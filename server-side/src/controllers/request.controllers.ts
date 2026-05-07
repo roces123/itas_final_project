@@ -70,10 +70,9 @@ export const getAllRequests = async (req: Request, res: Response) => {
     }
 };
 
-// 4. UPDATE: Admin Update (Dito madalas ang error sa ID casting)
+// 4. UPDATE: Admin Update
 export const updateRequestStatus = async (req: Request, res: Response) => {
     try {
-        // FIX: Siguraduhin na string ang ID para mawala ang TS error
         const id = req.params.id as string; 
         const { status, adminRemarks, adminFileUrl } = req.body;
 
@@ -91,12 +90,13 @@ export const updateRequestStatus = async (req: Request, res: Response) => {
     }
 };
 
-// 5. UPDATE: Student Edit (Habang Pending pa)
+// 5. UPDATE: Student Edit (With Automatic System Remark)
 export const updateStudentRequest = async (req: any, res: Response) => {
     try {
         const id = req.params.id as string;
         const studentUid = req.user.id;
         const { reason, quantity } = req.body;
+        const timestamp = new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
 
         const docRef = db.collection('requests').doc(id);
         const doc = await docRef.get();
@@ -105,12 +105,23 @@ export const updateStudentRequest = async (req: any, res: Response) => {
             return res.status(403).json({ message: "Unauthorized" });
         }
 
+        // Tanging "Pending" lang ang pwedeng i-edit
         if (doc.data()?.status !== 'Pending') {
             return res.status(400).json({ message: "Only pending requests can be edited" });
         }
 
-        await docRef.update({ reason, quantity, updatedAt: new Date() });
-        res.json({ message: "Request details updated" });
+        // Kunin ang dating remarks para dagdagan lang ng note
+        const oldRemarks = doc.data()?.adminRemarks || '';
+        const systemNote = `${oldRemarks}\n[SYSTEM: Updated by student on ${timestamp}]`.trim();
+
+        await docRef.update({ 
+            reason, 
+            quantity, 
+            adminRemarks: systemNote,
+            updatedAt: new Date() 
+        });
+
+        res.json({ message: "Request details updated and admin notified via remarks" });
     } catch (error: any) {
         res.status(500).json({ error: error.message });
     }
@@ -129,7 +140,6 @@ export const cancelRequest = async (req: any, res: Response) => {
             return res.status(403).json({ message: "Unauthorized" });
         }
 
-        // Tanging "Pending" lang ang pwedeng i-cancel ng student
         if (doc.data()?.status !== 'Pending') {
             return res.status(400).json({ message: "Only pending requests can be cancelled" });
         }
@@ -141,7 +151,7 @@ export const cancelRequest = async (req: any, res: Response) => {
     }
 };
 
-// 7. DELETE: Admin Purge (Permanent Delete)
+// 7. DELETE: Admin Purge
 export const adminDeleteRequest = async (req: Request, res: Response) => {
     try {
         const id = req.params.id as string;
