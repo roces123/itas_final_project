@@ -1,1 +1,119 @@
-<p>my-request works!</p>
+<div class="dark-bg py-4 min-vh-100 bg-slate-950 text-slate-200">
+  <div class="container mx-auto px-4" *ngIf="request">
+    
+    <div class="mb-6 flex items-center gap-4">
+      <button (click)="goBack()" class="flex items-center gap-2 text-blue-500 hover:text-blue-400 font-bold transition-all bg-slate-800/50 px-4 py-2 rounded-xl border border-slate-700">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back
+      </button>
+      <div>
+        <h2 class="text-white font-black tracking-tight mb-0 text-xl">Request Details</h2>
+        <p class="text-slate-400 text-[10px] uppercase tracking-widest font-bold">Document Tracking System</p>
+      </div>
+    </div>
+
+    <div class="mb-6 animate-in fade-in slide-in-from-bottom-4" *ngIf="request.adminFileUrl && request.adminFileUrl !== ''">
+      
+      <div *ngIf="request.status?.toLowerCase() === 'released'" 
+            class="p-6 rounded-[2rem] bg-emerald-500/10 border border-emerald-500/20 shadow-lg shadow-emerald-500/5">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="flex items-center gap-5">
+            <div class="p-4 bg-emerald-500/20 rounded-3xl border border-emerald-500/30">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <div>
+              <h5 class="text-emerald-400 font-black mb-0">Document is Ready!</h5>
+              <p class="text-slate-400 text-[10px] uppercase tracking-widest font-bold">Official digital copy is now available</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 w-full md:w-auto">
+            <a [href]="request.adminFileUrl" target="_blank" 
+               class="flex-1 md:flex-none text-center px-6 py-3 rounded-2xl bg-slate-800 text-white text-xs font-black uppercase tracking-widest border border-slate-700 hover:bg-slate-700 transition-all">
+              View
+            </a>
+            <button (click)="downloadFile(request.adminFileUrl, request.docType)" 
+                    class="flex-1 md:flex-none px-6 py-3 rounded-2xl bg-emerald-600 text-white text-xs font-black uppercase tracking-widest shadow-lg shadow-emerald-600/20 hover:bg-emerald-500 transition-all">
+              Download
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="request.status?.toLowerCase() === 'processing'" 
+            class="p-6 rounded-[2rem] bg-blue-500/10 border border-blue-500/20 shadow-lg shadow-blue-500/5">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="flex items-center gap-5">
+            <div class="p-4 bg-blue-500/20 rounded-3xl border border-blue-500/30">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </div>
+            <div>
+              <h5 class="text-blue-400 font-black mb-0">File Uploaded (Processing)</h5>
+              <p class="text-slate-400 text-[10px] uppercase tracking-widest font-bold">The admin has attached a preview</p>
+            </div>
+          </div>
+          <a [href]="request.adminFileUrl" target="_blank" 
+             class="w-full md:w-auto text-center px-6 py-3 rounded-2xl bg-blue-600 text-white text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-600/20 hover:bg-blue-500 transition-all">
+            Preview Draft
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-hidden shadow-2xl border-0 rounded-[2rem] bg-slate-900/50 backdrop-blur-md mb-6 border border-slate-800">
+      <div class="bg-gradient-to-r from-indigo-600 to-blue-600 p-6 flex justify-between items-center">
+        <div>
+          <h3 class="text-white font-black mb-1 uppercase tracking-tight">{{ request.docType || request.documentType }}</h3>
+          <div class="flex items-center gap-2">
+            <span class="text-blue-100 text-[10px] uppercase font-bold tracking-tighter opacity-70">Reference ID:</span>
+            <code class="text-white font-mono text-xs">{{ request.id }}</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="space-y-6 md:border-r md:border-slate-800/50 md:pr-8">
+            <div>
+              <p class="mb-2 text-slate-500 text-[10px] font-black uppercase tracking-widest">Purpose of Request</p>
+              <p class="text-slate-200 font-medium italic">"{{ request.purpose }}"</p>
+            </div>
+            
+          
+          <div class="space-y-6">
+            <div>
+              <p class="mb-2 text-slate-500 text-[10px] font-black uppercase tracking-widest">Admin Remarks</p>
+              <div class="bg-slate-950/50 p-4 rounded-2xl border border-slate-800 shadow-inner">
+                <p class="mb-0 text-slate-400 italic text-xs leading-relaxed">
+                  {{ request.adminRemarks || 'Waiting for admin response...' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-6 rounded-[2rem] bg-slate-900/50 border border-slate-800/50 shadow-xl">
+      <h5 class="text-white text-[10px] font-black uppercase tracking-widest mb-6 flex items-center gap-3">Tracking Progress</h5>
+      <div class="ml-4 border-l-2 border-slate-800 pl-6 pb-2">
+        <div class="relative">
+          <div [ngClass]="{
+                'bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)] animate-pulse': request.status?.toLowerCase() === 'processing',
+                'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]': request.status?.toLowerCase() === 'released',
+                'bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.5)]': request.status?.toLowerCase() === 'pending'
+              }" 
+               class="h-3.5 w-3.5 rounded-full absolute -left-[31px] top-1 border-4 border-slate-950">
+          </div>
+          <h6 class="text-white mb-1 font-black uppercase tracking-tight text-sm">Status: {{ request.status | titlecase }}</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

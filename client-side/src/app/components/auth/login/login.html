@@ -1,62 +1,63 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
-    <div>
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-        Sign in to your account
+<div class="min-h-screen flex items-center justify-center bg-[#0a0f1a] py-12 px-4 sm:px-6 lg:px-8 font-sans">
+  <div class="max-w-md w-full space-y-8 bg-[#111827] p-10 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-slate-800/50">
+    
+    <div class="text-center">
+      <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 tracking-tighter">
+        ISUFST - DRS
       </h2>
-      <p class="mt-2 text-center text-sm text-gray-600">
-        Access the ISUFST Document Request System
+      <p class="mt-3 text-center text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">
+        Sign in to your account
       </p>
     </div>
     
     <form class="mt-8 space-y-6" (ngSubmit)="onLogin()">
-      <div class="rounded-md shadow-sm space-y-4">
-        <!-- Email Address -->
+      <div class="space-y-5">
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+          <label class="block text-[10px] font-black text-indigo-400/80 uppercase tracking-widest mb-1.5 ml-2">Official Email</label>
           <input [(ngModel)]="loginData.email" name="email" type="email" required 
-            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" 
+            class="w-full bg-[#0a0f1a] p-4 rounded-2xl border border-slate-800 text-slate-100 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-700 sm:text-sm" 
             placeholder="student@isufst.edu.ph">
         </div>
 
         <div>
-          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <label class="block text-[10px] font-black text-indigo-400/80 uppercase tracking-widest mb-1.5 ml-2">Password</label>
           <input [(ngModel)]="loginData.password" name="password" type="password" required 
-            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" 
-            placeholder="Password">
+            class="w-full bg-[#0a0f1a] p-4 rounded-2xl border border-slate-800 text-slate-100 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-700 sm:text-sm" 
+            placeholder="••••••••">
         </div>
       </div>
 
-      <div class="flex items-center justify-between">
+      <div class="flex items-center justify-between px-1">
         <div class="flex items-center">
-          <input id="remember-me" name="remember-me" type="checkbox" 
-            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-          <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+          <input id="remember-me" 
+                 name="remember-me" 
+                 type="checkbox" 
+                 [(ngModel)]="rememberMe"
+                 class="h-4 w-4 bg-[#0a0f1a] border-slate-700 rounded text-indigo-600 focus:ring-indigo-500/50 cursor-pointer">
+          <label for="remember-me" class="ml-2 block text-xs font-medium text-slate-400 cursor-pointer">
             Remember me
           </label>
         </div>
 
-        <div class="text-sm">
-          <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
-            Forgot your password?
+        <div class="text-xs">
+          <a href="#" class="font-bold text-indigo-400 hover:text-indigo-300 transition-colors">
+            Forgot password?
           </a>
         </div>
       </div>
 
       <div>
-        <button type="submit" 
-          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150">
-          Sign In
+        <button type="submit" [disabled]="isLoading"
+          class="group relative w-full flex justify-center py-4 px-4 bg-gradient-to-r from-indigo-600 to-indigo-700 text-xs font-black uppercase tracking-[0.2em] rounded-2xl text-white hover:from-indigo-500 hover:to-indigo-600 shadow-xl shadow-indigo-900/40 focus:outline-none transition-all active:scale-[0.97] disabled:opacity-50">
+          {{ isLoading ? 'SIGNING IN...' : 'SIGN IN' }}
         </button>
       </div>
     </form>
 
-    <div class="text-center">
-      <p class="text-sm text-gray-600">
-        Don't have an account yet? 
-        <a routerLink="/register" class="font-medium text-blue-600 hover:text-blue-500 cursor-pointer transition duration-150">
-          Register here
-        </a>
+    <div class="text-center pt-2">
+      <p class="text-[11px] text-slate-500 font-bold tracking-wide">
+        DON'T HAVE AN ACCOUNT YET? 
+        <a routerLink="/register" class="text-indigo-400 font-black hover:text-indigo-300 transition-colors ml-1 uppercase">Register here</a>
       </p>
     </div>
   </div>

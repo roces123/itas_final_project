@@ -1,0 +1,13 @@
+{
+  "routes": {
+    "/": {},
+    "/admin-dashboard": {},
+    "/login": {},
+    "/manage-request": {},
+    "/my-request": {},
+    "/new-request": {},
+    "/register": {},
+    "/user-dashboard": {},
+    "/user/profile": {}
+  }
+}

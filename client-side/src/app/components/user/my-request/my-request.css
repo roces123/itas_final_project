@@ -1,0 +1,62 @@
+/* Base Background para sa buong page */
+.dark-bg {
+  background-color: #0f172a; /* Midnight Blue base */
+  min-height: 100vh;
+  color: #f8fafc;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Card Design para sa Request Details */
+.dark-card {
+  background-color: #1e293b; /* Slightly lighter blue-gray */
+  border-radius: 12px;
+  border: 1px solid #334155;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+.remarks-box {
+  background-color: #0f172a;
+  border-left: 4px solid #3b82f6;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+/* Timeline Logic (The "Dot" and "Line") */
+.timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 5px;
+  bottom: 0;
+  width: 2px;
+  background: #334155; /* Ang vertical line */
+}
+
+.status-dot {
+  position: absolute;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #475569; /* Default gray */
+  border: 3px solid #1e293b;
+  z-index: 2;
+}
+
+/* Glowing effect base sa status */
+.status-dot.active {
+  background: #3b82f6; /* Blue for Processing */
+  box-shadow: 0 0 10px #3b82f6;
+}
+
+.status-dot.success {
+  background: #10b981; /* Green for Released/Ready */
+  box-shadow: 0 0 10px #10b981;
+}
+
+.text-info-custom { color: #3b82f6; font-weight: bold; }

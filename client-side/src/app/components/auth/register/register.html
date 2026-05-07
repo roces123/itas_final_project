@@ -1,72 +1,95 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
-    <div>
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-        Create Student Account
-      </h2>
-      <p class="mt-2 text-center text-sm text-gray-600">
-        Register to start requesting documents
-      </p>
+<div class="min-h-screen bg-[#0a0f1a] flex items-center justify-center p-4 font-sans">
+  <div class="bg-[#111827] p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-full max-w-md border border-slate-800/50">
+    
+    <div class="text-center mb-8">
+      <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 tracking-tighter">ISUFST - DRS</h2>
+      <p class="text-slate-500 text-[10px] font-bold mt-2 uppercase tracking-[0.3em]">Create Student Account</p>
     </div>
 
-    <form class="mt-8 space-y-6" (ngSubmit)="onRegister()">
-      <div class="rounded-md shadow-sm space-y-4">
+    <form (submit)="onRegister()" class="space-y-4">
+      
+      <div>
+        <label class="block text-[10px] font-black text-indigo-400/80 uppercase tracking-widest mb-1.5 ml-2">Full Name</label>
+        <input type="text" [(ngModel)]="registerData.fullName" name="fullName" required
+               class="w-full bg-[#0a0f1a] p-4 rounded-2xl border border-slate-800 text-slate-100 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-700"
+               placeholder="Juan Dela Cruz">
+      </div>
 
+      <div>
+        <label class="block text-[10px] font-black text-indigo-400/80 uppercase tracking-widest mb-1.5 ml-2">Official Email</label>
+        <input type="email" [(ngModel)]="registerData.email" name="email" required
+               class="w-full bg-[#0a0f1a] p-4 rounded-2xl border border-slate-800 text-slate-100 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-700"
+               placeholder="username@isufst.edu.ph">
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
         <div>
-          <label for="studentId" class="block text-sm font-medium text-gray-700">Student ID</label>
-          <input [(ngModel)]="registerData.studentId" name="studentId" type="text" required 
-            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" 
-            placeholder="e.g. 2022-1234">
+          <label class="block text-[10px] font-black text-indigo-400/80 uppercase tracking-widest mb-1.5 ml-2">Phone</label>
+          <input type="text" [(ngModel)]="registerData.phone" name="phone" required
+                 class="w-full bg-[#0a0f1a] p-4 rounded-2xl border border-slate-800 text-slate-100 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-700"
+                 placeholder="0912...">
         </div>
 
         <div>
-          <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
-          <input [(ngModel)]="registerData.fullName" name="fullName" type="text" required 
-            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" 
-            placeholder="Juan Dela Cruz">
-        </div>
-
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
-          <input [(ngModel)]="registerData.email" name="email" type="email" required 
-            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" 
-            placeholder="student@isufst.edu.ph">
-        </div>
-
-        <div>
-          <label for="course" class="block text-sm font-medium text-gray-700">Course</label>
-          <select [(ngModel)]="registerData.course" name="course" required
-            class="block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-            <option value="">Select your course</option>
-            <option value="BSIT">BS in Information Technology</option>
-            <option value="BSCS">BS in Computer Science</option>
-            <option value="BSIS">BS in Information Systems</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-          <input [(ngModel)]="registerData.password" name="password" type="password" required 
-            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" 
-            placeholder="Password">
+          <label class="block text-[10px] font-black text-indigo-400/80 uppercase tracking-widest mb-1.5 ml-2">ID Number</label>
+          <input type="text" [(ngModel)]="registerData.studentId" name="studentId" required
+                 class="w-full bg-[#0a0f1a] p-4 rounded-2xl border border-slate-800 text-slate-100 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-700"
+                 placeholder="2024-XXXXX">
         </div>
       </div>
 
       <div>
-        <button type="submit" 
-          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150">
-          Register Account
-        </button>
+        <label class="block text-[10px] font-black text-indigo-400/80 uppercase tracking-widest mb-1.5 ml-2">Course</label>
+        <div class="relative">
+          <select [(ngModel)]="registerData.course" name="course" required
+                  class="w-full bg-[#0a0f1a] p-4 rounded-2xl border border-slate-800 text-slate-100 focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all appearance-none cursor-pointer">
+            <option value="" disabled selected class="text-slate-600">Select course</option>
+            <option value="BSIT" class="bg-[#111827]">BSIT</option>
+            <option value="BSHM" class="bg-[#111827]">BSHM</option>
+            <option value="BSED" class="bg-[#111827]">BSED</option>
+            <option value="BSF" class="bg-[#111827]">BSF</option>
+          </select>
+          <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
       </div>
-    </form>
 
-    <div class="text-center">
-      <p class="text-sm text-gray-600">
-        Already have an account? 
-        <a routerLink="/login" class="font-medium text-blue-600 hover:text-blue-500 cursor-pointer transition duration-150">
-          Sign in here
-        </a>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-[10px] font-black text-indigo-400/80 uppercase tracking-widest mb-1.5 ml-2">Password</label>
+          <input type="password" [(ngModel)]="registerData.password" name="password" required
+                 class="w-full bg-[#0a0f1a] p-4 rounded-2xl border border-slate-800 text-slate-100 focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all">
+          
+          <div class="mt-3 h-1 w-full bg-slate-900 rounded-full overflow-hidden">
+            <div [style.width.%]="getPasswordStrength()" 
+                 [ngClass]="{
+                   'bg-rose-500': getPasswordStrength() <= 25,
+                   'bg-amber-500': getPasswordStrength() === 50,
+                   'bg-yellow-400': getPasswordStrength() === 75,
+                   'bg-emerald-500': getPasswordStrength() === 100
+                 }" class="h-full transition-all duration-700 ease-out shadow-[0_0_15px_rgba(99,102,241,0.3)]">
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-black text-indigo-400/80 uppercase tracking-widest mb-1.5 ml-2">Confirm Password</label>
+          <input type="password" [(ngModel)]="registerData.confirmPassword" name="confirmPassword" required
+                 class="w-full bg-[#0a0f1a] p-4 rounded-2xl border border-slate-800 text-slate-100 focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all">
+        </div>
+      </div>
+
+      <button type="submit" 
+              class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 text-white py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-xs hover:from-indigo-500 hover:to-indigo-600 shadow-xl shadow-indigo-900/40 transition-all active:scale-[0.97] mt-6">
+        Register Account
+      </button>
+
+      <p class="text-center text-[11px] text-slate-500 mt-8 font-bold tracking-wide">
+        Already have an account? <a routerLink="/login" class="text-indigo-400 font-black hover:text-indigo-300 transition-colors ml-1">SIGNIN HERE</a>
       </p>
-    </div>
+    </form>
   </div>
 </div>

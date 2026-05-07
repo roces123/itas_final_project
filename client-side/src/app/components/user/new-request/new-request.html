@@ -1,1 +1,73 @@
-<p>new-request works!</p>
+<div class="min-h-screen bg-[#0f172a] p-4 md:p-8 font-sans">
+  <div class="max-w-2xl mx-auto mb-6">
+    <button (click)="goBack()" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors group">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      <span class="text-xs font-black uppercase tracking-widest">Back to Dashboard</span>
+    </button>
+  </div>
+
+  <div class="max-w-2xl mx-auto bg-[#1e293b] rounded-[2.5rem] shadow-2xl border border-slate-800 p-6 md:p-10">
+    <div class="mb-10 text-center">
+      <h2 class="text-3xl font-black text-white uppercase tracking-tight">New Document Request</h2>
+      <p class="text-slate-400 text-sm italic mt-1">Please fill out the form below to request official documents.</p>
+    </div>
+
+    <form (submit)="onSubmit()" class="space-y-8">
+      <div>
+        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Select Document</label>
+        <select [(ngModel)]="requestData.docType" name="docType" required
+                class="w-full bg-slate-900 p-4 rounded-2xl border border-slate-700 text-slate-200 focus:border-indigo-500 outline-none transition appearance-none">
+          <option value="" disabled selected>Choose a document...</option>
+          <option value="Transcript of Records">Transcript of Records (TOR)</option>
+          <option value="Good Moral Certificate">Good Moral Certificate</option>
+          <option value="Certificate of Enrollment">Certificate of Enrollment (COE)</option>
+          <option value="Certificate of Grades">Certificate of Grades</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">How would you like to receive it?</label>
+        <div class="grid grid-cols-2 gap-4">
+          <label class="flex items-center justify-center p-4 border rounded-2xl cursor-pointer transition-all border-slate-700 bg-slate-900"
+                 [ngClass]="{'border-indigo-500 bg-indigo-500/10 shadow-[0_0_15px_rgba(99,102,241,0.2)]': requestData.claimingOption === 'digital'}">
+            <input type="radio" [(ngModel)]="requestData.claimingOption" name="option" value="digital" class="hidden">
+            <span class="text-xs font-bold uppercase tracking-wide" [ngClass]="requestData.claimingOption === 'digital' ? 'text-indigo-400' : 'text-slate-400'">Digital Copy (PDF)</span>
+          </label>
+          <label class="flex items-center justify-center p-4 border rounded-2xl cursor-pointer transition-all border-slate-700 bg-slate-900"
+                 [ngClass]="{'border-indigo-500 bg-indigo-500/10 shadow-[0_0_15px_rgba(99,102,241,0.2)]': requestData.claimingOption === 'physical'}">
+            <input type="radio" [(ngModel)]="requestData.claimingOption" name="option" value="physical" class="hidden">
+            <span class="text-xs font-bold uppercase tracking-wide" [ngClass]="requestData.claimingOption === 'physical' ? 'text-indigo-400' : 'text-slate-400'">Physical Pickup</span>
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Purpose of Request</label>
+        <textarea [(ngModel)]="requestData.purpose" name="purpose" rows="3" required
+                  placeholder="e.g. For Scholarship, Employment, or Transfer"
+                  class="w-full bg-slate-900 p-4 rounded-2xl border border-slate-700 text-slate-200 focus:border-indigo-500 outline-none transition placeholder:text-slate-600"></textarea>
+      </div>
+
+      <div>
+        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Upload Requirement (Valid ID / Clearance)</label>
+        <div class="flex items-center justify-center w-full">
+          <label class="flex flex-col items-center justify-center w-full h-40 border-2 border-slate-700 border-dashed rounded-2xl cursor-pointer bg-slate-900/50 hover:bg-slate-900 hover:border-indigo-500 transition-all group">
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+              <svg class="w-10 h-10 mb-3 text-slate-600 group-hover:text-indigo-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+              <p class="text-xs text-slate-500 uppercase tracking-widest font-black group-hover:text-slate-300"><span class="text-indigo-500">Click to upload</span> or drag and drop</p>
+              <p class="text-[10px] text-indigo-400 font-mono mt-2 uppercase tracking-tighter" *ngIf="selectedFile">SELECTED: {{ selectedFile.name }}</p>
+            </div>
+            <input type="file" class="hidden" (change)="onFileSelected($event)" required />
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="isUploading"
+              class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-xs hover:bg-indigo-700 shadow-lg shadow-indigo-500/20 transition-all active:scale-95 disabled:bg-slate-700 disabled:text-slate-500">
+        {{ isUploading ? 'Submitting Request...' : 'Submit Request' }}
+      </button>
+    </form>
+  </div>
+</div>

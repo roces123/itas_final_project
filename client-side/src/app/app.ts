@@ -1,12 +1,27 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { LoadingService } from './services/loading.services';
+import { AuthService } from './services/auth.services'; // Dagdag ito
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
 export class App {
-  protected readonly title = signal('client-side');
+  title = 'Document Request System';
+  public loadingService = inject(LoadingService);
+  private authService = inject(AuthService); // Inject ito
+
+  // Kukunin ang role mula sa localStorage via AuthService
+  get userRole(): string | null {
+    return this.authService.getRole();
+  }
+
+  logout() {
+    this.authService.logout();
+  }
 }

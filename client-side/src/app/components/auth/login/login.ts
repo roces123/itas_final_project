@@ -1,37 +1,106 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, NgZone, PLATFORM_ID, OnInit } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router'; // Siguraduhing nandito ang Router
+import { Router, RouterLink } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+
+// Firebase Imports
+import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Firestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
-export class LoginComponent {
+export class Login implements OnInit {
+  private auth = inject(Auth);
+  private firestore = inject(Firestore);
+  private router = inject(Router);
+  private ngZone = inject(NgZone);
+  private platformId = inject(PLATFORM_ID);
+  private http = inject(HttpClient);
+
   loginData = {
     email: '',
     password: ''
   };
 
-  // I-inject ang Router sa constructor
-  constructor(private router: Router) {}
+  rememberMe: boolean = false;
+  
+  // ✅ FIX: Added missing property for the template
+  isLoading: boolean = false;
 
-  onLogin() {
-    console.log('Login attempt:', this.loginData);
+  ngOnInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      const savedEmail = localStorage.getItem('rememberedEmail');
+      if (savedEmail) {
+        this.loginData.email = savedEmail;
+        this.rememberMe = true;
+      }
+    }
+  }
 
-    if (this.loginData.email === 'admin@isufst.edu.ph' && this.loginData.password === 'admin123') {
-      
-      this.router.navigate(['/admin-dashboard']);
-      
-    } else if (this.loginData.email.endsWith('@isufst.edu.ph')) {
-      
-      this.router.navigate(['/dashboard']);
-      
-    } else {
-      alert('Invalid credentials! Please use your ISUFST email.');
+  async onLogin() {
+    const { email, password } = this.loginData;
+    
+    // ✅ Start loading
+    this.isLoading = true;
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
+
+      const fbToken = await userCredential.user.getIdToken();
+
+      this.http.post('http://localhost:3000/api/auth/login', {
+        token: fbToken
+      }).subscribe({
+        next: (res: any) => {
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('token', res.token);
+            localStorage.setItem('userRole', res.userRole);
+
+            if (res.userData) {
+              localStorage.setItem('userData', JSON.stringify(res.userData));
+            }
+
+            if (this.rememberMe) {
+              localStorage.setItem('rememberedEmail', this.loginData.email);
+            } else {
+              localStorage.removeItem('rememberedEmail');
+            }
+          }
+
+          // ✅ Stop loading on success
+          this.isLoading = false;
+
+          this.ngZone.run(() => {
+            if (res.userRole === 'admin') {
+              this.router.navigate(['/admin-dashboard']);
+            } else {
+              this.router.navigate(['/user-dashboard']);
+            }
+          });
+        },
+        error: (err: any) => {
+          // ✅ Stop loading on error
+          this.isLoading = false;
+          console.error("❌ Backend login error:", err);
+          alert("Authorization failed. Please try again.");
+        }
+      });
+
+    } catch (error: any) {
+      // ✅ Stop loading on Firebase error
+      this.isLoading = false;
+      console.error("❌ Firebase login error:", error);
+      alert("Login failed: " + error.message);
     }
   }
 }
