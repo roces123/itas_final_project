@@ -13,5 +13,6 @@ export const environment = {
   supabase: {
     url: "https://ycuqiachyxjcizfkttfi.supabase.co",
     key: "sb_publishable_hNQIz7LRM0Ik0mXA22a3jw_pb7J7Nat"
-  }
+  },
+  apiUrl: "https://itas-final-project.onrender.com"
 }; // <--- Dito dapat ang huling saradong bracket.
