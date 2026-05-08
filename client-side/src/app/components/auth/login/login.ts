@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 // Firebase Imports
 import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -58,7 +59,7 @@ export class Login implements OnInit {
 
       const fbToken = await userCredential.user.getIdToken();
 
-      this.http.post('${environment.apiUrl}/api/auth/login', {
+      this.http.post(`${environment.apiUrl}/api/auth/login`, {
         token: fbToken
       }).subscribe({
         next: (res: any) => {
