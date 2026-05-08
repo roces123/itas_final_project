@@ -6,6 +6,7 @@ import { Router, RouterModule } from '@angular/router';
 // Firebase Imports
 import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth'; 
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-new-request',
@@ -63,7 +64,7 @@ export class NewRequestComponent {
     const formData = new FormData();
     formData.append('file', this.selectedFile);
 
-    this.http.post('http://localhost:3000/api/upload', formData, { headers })
+    this.http.post(`${environment.apiUrl.replace('/auth', '')}/upload`, formData, { headers })
       .subscribe({
         next: async (res: any) => {
           const urlToSave = res.fileUrl || res.url || ''; 
