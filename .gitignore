@@ -7,7 +7,7 @@ client-side/node_modules/
 server-side/node_modules/
 
 # Angular Environments (Importante ito para sa security niyo!)
-client-side/src/environments/environment.ts
+# client-side/src/environments/environment.ts
 client-side/src/environments/environment.development.ts
 client-side/src/environments/environment.prod.ts
 

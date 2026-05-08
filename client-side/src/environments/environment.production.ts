@@ -1,6 +1,6 @@
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:3000/api/auth',
+  production: true,
+  apiUrl: 'https://itas-final-project.vercel.app/api/auth', // replace with your actual deployed backend URL
   firebase: {
     apiKey: "AIzaSyDfX6iUPJE2lFUbEDElEQychLifi0oEmUg",
     authDomain: "delmo-bd4bd.firebaseapp.com",

@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,8 @@ import { Router } from '@angular/router';
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  
-  private apiUrl = 'http://localhost:3000/api/auth'; 
+
+  private apiUrl = environment.apiUrl;
 
   register(userData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, userData);
@@ -21,7 +22,6 @@ export class AuthService {
       tap(response => {
         if (response.token) {
           localStorage.setItem('token', response.token);
-          // In-update para mag-match sa keys ng auth.controllers response
           localStorage.setItem('userRole', response.userRole);
           localStorage.setItem('userData', JSON.stringify(response.userData));
         }
@@ -39,7 +39,7 @@ export class AuthService {
   }
 
   getRole() {
-    return localStorage.getItem('userRole'); 
+    return localStorage.getItem('userRole');
   }
 
   isLoggedIn(): boolean {
