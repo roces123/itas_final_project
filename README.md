@@ -21,9 +21,9 @@ DocumentRequestSystem/
 
 ##  2. Live Links
 
-Frontend URL: [Ilagay Dito ang Link, e.g., https://isufst-drs.vercel.app]
+Frontend URL: [[Ilagay Dito ang Link, e
 
-Backend API URL: [Ilagay Dito ang Link, e.g., https://isufst-api.render.com]
+Backend API URL: https://itas-final-project.onrender.com/
 
 ## 3. Tech Stack
 
