@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
-// Firebase Imports (Keep these if you still use them elsewhere, but submission goes to Render)
 import { Firestore } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth'; 
 import { environment } from '../../../../environments/environment';
@@ -29,7 +28,7 @@ export class NewRequestComponent {
   selectedFile: File | null = null;
   isUploading = false;
 
-  // IMPORTANT: Keep this to avoid TS2339 error in HTML
+  // Pinanatili para hindi mag-error ang Angular compiler sa HTML
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
   }
@@ -39,7 +38,7 @@ export class NewRequestComponent {
   }
 
   async onSubmit() {
-    // 1. Validation
+    // 1. Basic Validation
     if (!this.requestData.docType || !this.requestData.purpose) {
       alert('Please fill out all required fields.');
       return;
@@ -47,38 +46,51 @@ export class NewRequestComponent {
 
     this.isUploading = true;
 
-    // 2. Setup Headers
+    // 2. Kunin ang User Information mula sa localStorage
+    // Ito ang susi para hindi maging "Anonymous" sa database
+    const rawUserData = localStorage.getItem('userData');
+    const userData = rawUserData ? JSON.parse(rawUserData) : null;
+    
+    const userFullName = userData?.fullName || 'Anonymous Student';
+    const userEmail = userData?.email || 'N/A';
+
+    // 3. Setup Auth Headers
     const token = localStorage.getItem('token') || ''; 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     /**
-     * 3. Construct JSON Body
-     * Ito dapat ay mag-match sa req.body ng iyong Backend Controller:
-     * { documentType, reason, quantity, supabaseFileUrl }
+     * 4. Construct JSON Body
+     * Kasama na ang fullName at requestedBy para mabasa ng updated backend controller.
      */
     const body = {
       documentType: this.requestData.docType,
       reason: this.requestData.purpose,
       quantity: 1,
-      supabaseFileUrl: '' // Empty string muna since JSON ang gamit ng backend mo
+      supabaseFileUrl: '', 
+      fullName: userFullName,  // Ipinapasa ang pangalan mula sa localStorage
+      requestedBy: userEmail   // Ipinapasa ang email
     };
 
     /**
-     * 4. POST to Backend (Render)
-     * Inalis ang .replace('/auth', '') at pinalitan ng /api/requests
+     * 5. POST to Render Backend
+     * Gamit ang tamang API route (/api/requests) para maiwasan ang 404 error.
      */
     this.http.post(`${environment.apiUrl}/api/requests`, body, { headers })
       .subscribe({
         next: (res: any) => {
-          console.log('Success:', res);
+          console.log('Submission Success:', res);
           alert('Request Submitted Successfully!');
           this.router.navigate(['/user-dashboard']);
         },
         error: (err) => {
           console.error('Submit Error:', err);
           this.isUploading = false;
-          const errorMsg = err.status === 401 ? 'Unauthorized: Please login again.' : 'Server error. Check if the route exists.';
-          alert(errorMsg);
+          
+          if (err.status === 401) {
+            alert('Session expired. Please login again.');
+          } else {
+            alert('Failed to submit request. Please check your connection or backend logs.');
+          }
         }
       });
   }
