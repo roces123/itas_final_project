@@ -3,9 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
-// Firebase Imports
-import { Firestore, collection, addDoc } from '@angular/fire/firestore';
-import { Auth } from '@angular/fire/auth'; 
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -16,33 +13,23 @@ import { environment } from '../../../../environments/environment';
 })
 export class NewRequestComponent {
   private http = inject(HttpClient);
-  private firestore = inject(Firestore);
-  private auth = inject(Auth); 
   private router = inject(Router);
 
   requestData = {
     docType: '',
     claimingOption: 'digital',
-    purpose: ''
+    purpose: '',
+    quantity: 1
   };
 
-  selectedFile: File | null = null;
   isUploading = false;
-
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
-  }
 
   goBack() {
     this.router.navigate(['/user-dashboard']);
   }
 
-  async onSubmit() {
-    if (!this.selectedFile) {
-      alert('Please select a file first.');
-      return;
-    }
-
+  onSubmit() {
+    // 1. Validation
     if (!this.requestData.docType || !this.requestData.purpose) {
       alert('Please fill out all required fields.');
       return;
@@ -50,64 +37,42 @@ export class NewRequestComponent {
 
     this.isUploading = true;
 
-    // 1. Kunin ang user data mula sa localStorage para makuha ang Full Name
-    const rawUserData = localStorage.getItem('userData');
-    const userData = rawUserData ? JSON.parse(rawUserData) : null;
-    
-    // Siguraduhin na may fullName at email tayong makukuha
-    const userFullName = userData?.fullName || 'Anonymous Student';
-    const userEmail = userData?.email || 'N/A';
-
+    // 2. Setup Headers (Auth Token)
     const token = localStorage.getItem('token') || ''; 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    const formData = new FormData();
-    formData.append('file', this.selectedFile);
+    /**
+     * 3. Construct JSON Body
+     * Kailangang mag-match ito sa 'createRequest' controller sa backend mo:
+     * const { documentType, reason, quantity, supabaseFileUrl } = req.body;
+     */
+    const body = {
+      documentType: this.requestData.docType,
+      reason: this.requestData.purpose,
+      quantity: Number(this.requestData.quantity) || 1,
+      supabaseFileUrl: '' // Empty string muna dahil wala ka pang separate upload route
+    };
 
-    this.http.post(`${environment.apiUrl.replace('/auth', '')}/upload`, formData, { headers })
+    // 4. Send POST Request to Render Backend
+    // Ginamit ang backticks (`) at tamang API path
+    this.http.post(`${environment.apiUrl}/api/requests`, body, { headers })
       .subscribe({
-        next: async (res: any) => {
-          const urlToSave = res.fileUrl || res.url || ''; 
-
-          if (!urlToSave) {
-            alert('File uploaded but no link was generated.');
-            this.isUploading = false;
-            return;
-          }
-
-          const currentUser = this.auth.currentUser;
-
-          try {
-            const requestsCollection = collection(this.firestore, 'requests');
-            
-            // 2. I-save ang request kasama ang fullName field
-            await addDoc(requestsCollection, {
-              fullName: userFullName, // Ito ang babasahin ng Admin Dashboard
-              docType: this.requestData.docType,
-              claimingOption: this.requestData.claimingOption,
-              purpose: this.requestData.purpose,
-              fileUrl: urlToSave, 
-              fileName: this.selectedFile?.name,
-              status: 'Pending',
-              createdAt: new Date(),
-              requestedBy: userEmail, // Email nalang ang ilalagay dito para sa tracking
-              studentUid: currentUser?.uid || 'N/A'
-            });
-
-            alert('Request Submitted Successfully!');
-            this.router.navigate(['/user-dashboard']);
-          } catch (dbError) {
-            console.error('Firestore Error:', dbError);
-            alert('Database error. Please try again.');
-          } finally {
-            this.isUploading = false;
-          }
+        next: (res: any) => {
+          console.log('Success:', res);
+          alert('Request Submitted Successfully!');
+          this.router.navigate(['/user-dashboard']);
         },
         error: (err) => {
-          console.error('Upload Error:', err);
-          const errorMsg = err.status === 401 ? 'Unauthorized: Please login again.' : 'Server error.';
-          alert(errorMsg);
+          console.error('Submit Error:', err);
           this.isUploading = false;
+          
+          if (err.status === 401) {
+            alert('Unauthorized: Please login again.');
+          } else if (err.status === 404) {
+            alert('Route not found. Check if /api/requests exists in backend.');
+          } else {
+            alert('Server error. Please try again later.');
+          }
         }
       });
   }
