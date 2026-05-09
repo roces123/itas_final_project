@@ -4,11 +4,14 @@ import { db } from '../config/db';
 // 1. CREATE: Submit Request (Student)
 export const createRequest = async (req: any, res: Response) => {
     try {
-        const { documentType, reason, quantity, supabaseFileUrl } = req.body;
+        // Idinagdag ang fullName at requestedBy (email) sa destructuring
+        const { documentType, reason, quantity, supabaseFileUrl, fullName, requestedBy } = req.body;
         const studentUid = req.user.id;
 
         const newRequest = {
             studentUid,
+            fullName: fullName || 'Anonymous Student', // Para hindi mawala ang student information
+            requestedBy: requestedBy || 'N/A',         // Para sa tracking ng email
             documentType,
             reason,
             quantity: Number(quantity) || 1,
@@ -54,13 +57,21 @@ export const getAllRequests = async (req: Request, res: Response) => {
 
         const requests = await Promise.all(snapshot.docs.map(async (doc) => {
             const data = doc.data();
-            const userDoc = await db.collection('users').doc(data.studentUid).get();
-            const userData = userDoc.exists ? userDoc.data() : null;
+            
+            // Kung wala pang fullName sa request document, kukunin sa users collection
+            if (!data.fullName) {
+                const userDoc = await db.collection('users').doc(data.studentUid).get();
+                const userData = userDoc.exists ? userDoc.data() : null;
+                return {
+                    id: doc.id,
+                    ...data,
+                    fullName: userData ? userData.fullName : 'Unknown Student'
+                };
+            }
 
             return {
                 id: doc.id,
-                ...data,
-                fullName: userData ? userData.fullName : 'Unknown Student'
+                ...data
             };
         }));
 
@@ -105,12 +116,10 @@ export const updateStudentRequest = async (req: any, res: Response) => {
             return res.status(403).json({ message: "Unauthorized" });
         }
 
-        // Tanging "Pending" lang ang pwedeng i-edit
         if (doc.data()?.status !== 'Pending') {
             return res.status(400).json({ message: "Only pending requests can be edited" });
         }
 
-        // Kunin ang dating remarks para dagdagan lang ng note
         const oldRemarks = doc.data()?.adminRemarks || '';
         const systemNote = `${oldRemarks}\n[SYSTEM: Updated by student on ${timestamp}]`.trim();
 
