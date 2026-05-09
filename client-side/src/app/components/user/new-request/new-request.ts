@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
-import { Firestore } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth'; 
 import { environment } from '../../../../environments/environment';
 
@@ -28,7 +28,6 @@ export class NewRequestComponent {
   selectedFile: File | null = null;
   isUploading = false;
 
-  // Pinanatili para hindi mag-error ang Angular compiler sa HTML
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
   }
@@ -38,7 +37,11 @@ export class NewRequestComponent {
   }
 
   async onSubmit() {
-    // 1. Basic Validation
+    // 1. Validation
+    if (!this.selectedFile) {
+      alert('Please select a photo first.');
+      return;
+    }
     if (!this.requestData.docType || !this.requestData.purpose) {
       alert('Please fill out all required fields.');
       return;
@@ -46,51 +49,72 @@ export class NewRequestComponent {
 
     this.isUploading = true;
 
-    // 2. Kunin ang User Information mula sa localStorage
-    // Ito ang susi para hindi maging "Anonymous" sa database
-    const rawUserData = localStorage.getItem('userData');
-    const userData = rawUserData ? JSON.parse(rawUserData) : null;
-    
-    const userFullName = userData?.fullName || 'Anonymous Student';
-    const userEmail = userData?.email || 'N/A';
-
-    // 3. Setup Auth Headers
     const token = localStorage.getItem('token') || ''; 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    /**
-     * 4. Construct JSON Body
-     * Kasama na ang fullName at requestedBy para mabasa ng updated backend controller.
-     */
-    const body = {
-      documentType: this.requestData.docType,
-      reason: this.requestData.purpose,
-      quantity: 1,
-      supabaseFileUrl: '', 
-      fullName: userFullName,  // Ipinapasa ang pangalan mula sa localStorage
-      requestedBy: userEmail   // Ipinapasa ang email
-    };
+    // --- STEP 1: I-UPLOAD ANG PICTURE SA /api/upload ---
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
 
-    /**
-     * 5. POST to Render Backend
-     * Gamit ang tamang API route (/api/requests) para maiwasan ang 404 error.
-     */
-    this.http.post(`${environment.apiUrl}/api/requests`, body, { headers })
+    console.log('Step 1: Uploading image...');
+    this.http.post(`${environment.apiUrl}/api/upload`, formData, { headers })
       .subscribe({
-        next: (res: any) => {
-          console.log('Submission Success:', res);
-          alert('Request Submitted Successfully!');
-          this.router.navigate(['/user-dashboard']);
+        next: (uploadRes: any) => {
+          const uploadedImageUrl = uploadRes.url; // Ito yung link mula sa Supabase
+          console.log('Step 1 Success: Image URL is', uploadedImageUrl);
+
+          // --- STEP 2: I-SAVE ANG DETAILS SA /api/requests ---
+          const rawUserData = localStorage.getItem('userData');
+          const userData = rawUserData ? JSON.parse(rawUserData) : null;
+
+          const requestBody = {
+            documentType: this.requestData.docType,
+            reason: this.requestData.purpose,
+            quantity: 1,
+            supabaseFileUrl: uploadedImageUrl, // Ipinasa na natin ang link dito
+            fullName: userData?.fullName || 'Anonymous Student',
+            requestedBy: userData?.email || 'N/A'
+          };
+
+          this.http.post(`${environment.apiUrl}/api/requests`, requestBody, { headers })
+            .subscribe({
+              next: async (reqRes: any) => {
+                console.log('Step 2 Success: Request saved.');
+                
+                // --- STEP 3: BACKUP SA FIRESTORE (PARA SA DASHBOARD NIYO) ---
+                try {
+                  const requestsCollection = collection(this.firestore, 'requests');
+                  await addDoc(requestsCollection, {
+                    fullName: requestBody.fullName, 
+                    docType: this.requestData.docType,
+                    claimingOption: this.requestData.claimingOption,
+                    purpose: this.requestData.purpose,
+                    fileUrl: uploadedImageUrl, // Dito manggagaling ang picture sa view
+                    fileName: this.selectedFile?.name,
+                    status: 'Pending',
+                    createdAt: new Date(),
+                    requestedBy: requestBody.requestedBy,
+                    studentUid: this.auth.currentUser?.uid || 'N/A'
+                  });
+
+                  alert('Request Submitted Successfully with Image!');
+                  this.router.navigate(['/user-dashboard']);
+                } catch (err) {
+                  console.error('Firestore Error:', err);
+                  this.router.navigate(['/user-dashboard']);
+                }
+              },
+              error: (err) => {
+                console.error('Step 2 Error (Save):', err);
+                alert('Failed to save request details.');
+                this.isUploading = false;
+              }
+            });
         },
         error: (err) => {
-          console.error('Submit Error:', err);
+          console.error('Step 1 Error (Upload):', err);
+          alert('Failed to upload image. Check if file is too large or server is down.');
           this.isUploading = false;
-          
-          if (err.status === 401) {
-            alert('Session expired. Please login again.');
-          } else {
-            alert('Failed to submit request. Please check your connection or backend logs.');
-          }
         }
       });
   }
