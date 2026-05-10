@@ -95,12 +95,12 @@ Firebase Authentication: User at Admin identity management.
 ## 4. Setup Instructions
 
 Prerequisites
-| :--- | :---: 
+| :--- | :---: |
 | Node.js | >= 18 |
 
-| Angular CLI | npm install -g @angular/cli|
+| Angular CLI | npm install -g @angular/cli |
 
-| Firebase Account | For Database and Authentication
+| Firebase Account | For Database and Authentication |
 
 | Supabase Account | For Storage |
 
@@ -138,7 +138,7 @@ ng serve
 ---
 
 ## 5. API Overview
-Method | Endpoin | Description |
+Method | Endpoints | Description |
 | :--- | :---: | ---: |
 POST | /api/auth/login | User/Admin authentication |
 GET | /api/requests | Get all document requests |
