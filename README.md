@@ -94,15 +94,12 @@ Firebase Authentication: User at Admin identity management.
 
 ## 4. Setup Instructions
 
-Prerequisites
-| :--- | :---: |
-| Node.js | >= 18 |
-
-| Angular CLI | npm install -g @angular/cli |
-
-| Firebase Account | For Database and Authentication |
-
-| Supabase Account | For Storage |
+| Prerequisites | Description / Command |
+| :--- | :--- |
+| **Node.js** | `>= 18` |
+| **Angular CLI** | `npm install -g @angular/cli` |
+| **Firebase Account** | For Database and Authentication |
+| **Supabase Account** | For Storage |
 
 ---
 
