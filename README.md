@@ -188,22 +188,21 @@ DELETE | /api/requests/:id | Delete Request |
 
 | Page | Description | Preview |
 | :--- | :--- | :--- |
-| Signin Page | Signin page for users and admin | ![Signin](screenshots/signin.png) |
-| Register | Page where users can register or create account | ![Register](screenshots/register.png) |
-| Admin Dashboard | Admin dashboard showing request status history of the students and analytics | ![Admin Dashboard](screenshots/admin-dashboard.png) |
-| User Dashboard | User dashboard showing their own request history | ![User Dashboard](screenshots/user-dashboard.png) |
-| Manage Request | Manage Request showing how can admin manage every request | ![Manage Request 1](screenshots/manage-request.png) <br> ![Manage Request 2](screenshots/manage-request.2.png) |
-| New Request | This where user can add new request | ![New Request](screenshots/new-request.png) |
-| My Request | This is where user can see the progress and status of their request | ![My Request](screenshots/my-request.png) |
-
+| Signin Page | Signin page for users and admin | ![Signin](screenshots/UI/signin.png) |
+| Register | Page where users can register or create account | ![Register](screenshots/UI/register.png) |
+| Admin Dashboard | Admin dashboard showing analytics | ![Admin Dashboard](screenshots/UI/admin-dashboard.png) |
+| User Dashboard | User dashboard showing request history | ![User Dashboard](screenshots/UI/user-dashboard.png) |
+| Manage Request | Admin tools to manage every request | ![Manage Request 1](screenshots/UI/manage-request.png) <br> ![Manage Request 2](screenshots/UI/manage-request.2.png) |
+| New Request | Form to add new request | ![New Request](screenshots/UI/new-request.png) |
+| My Request | Student view of request progress | ![My Request](screenshots/UI/my-request.png) |
 
 ### API Testing Screenshots
 
 | Page | Description | Preview |
 | :--- | :--- | :--- |
-| Admin Login | Api login testing for admin | ![Admin Login](screenshots/admin-login.png) |
-| User Login | Api login testing for user | ![User Login](screenshots/user-login.png) |
-| Register | Api register testing | ![Register Testing](screenshots/user-register.png) |
+| Admin Login | API login testing for admin | ![Admin Login](screenshots/API-Testing/admin-login.png) |
+| User Login | API login testing for user | ![User Login](screenshots/API-Testing/user-login.png) |
+| Register Testing | API register testing | ![Register Testing](screenshots/API-Testing/user-register.png) |
 
 ---
 
