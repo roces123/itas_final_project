@@ -57,7 +57,7 @@ export class NewRequestComponent {
     formData.append('file', this.selectedFile);
 
     console.log('Step 1: Uploading image...');
-    this.http.post(`${environment.apiUrl}/api/upload`, formData, { headers })
+    this.http.post(`${environment.apiUrl}/upload`, formData, { headers })
       .subscribe({
         next: (uploadRes: any) => {
           const uploadedImageUrl = uploadRes.url; // Ito yung link mula sa Supabase
@@ -76,7 +76,7 @@ export class NewRequestComponent {
             requestedBy: userData?.email || 'N/A'
           };
 
-          this.http.post(`${environment.apiUrl}/api/requests`, requestBody, { headers })
+          this.http.post(`${environment.apiUrl}/requests`, requestBody, { headers })
             .subscribe({
               next: async (reqRes: any) => {
                 console.log('Step 2 Success: Request saved.');

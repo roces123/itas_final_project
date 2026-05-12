@@ -22,8 +22,8 @@ const PORT = process.env.PORT || 3000;
 
 // Dynamic CORS Configuration
 const allowedOrigins = [
-  "http://localhost:4200", // Para sa local development
-  process.env.FRONTEND_URL  // Dito papasok yung Vercel/Netlify URL niyo balang araw
+  "http://localhost:4200", 
+  process.env.FRONTEND_URL || "" // Siguraduhin na ang FRONTEND_URL sa Render ay yung Vercel link niyo
 ];
 
 const io = new Server(server, {
@@ -35,7 +35,7 @@ const io = new Server(server, {
                 callback(new Error('Not allowed by CORS'));
             }
         },
-        methods: ["GET", "POST"]
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE"] // Dinagdagan para sa socket updates
     }
 });
 
@@ -48,8 +48,10 @@ app.use(cors({
             callback(new Error('Not allowed by CORS'));
         }
     },
-    credentials: true
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"] // Tiyaking allowed ang lahat ng methods
 }));
+
 app.use(express.json());
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -104,9 +106,16 @@ app.get('/api/get-student-token', (req, res) => {
     res.json({ token });
 });
 
-// Routes
+// --- ROUTES SECTION ---
+
+// Auth Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/requests', requestRoutes);
+app.use('/auth', authRoutes); // Fallback para sa non-api prefix
+
+// Request Routes
+// Ito ang fix para sa 404 Error mo sa PUT at DELETE
+app.use('/api/requests', requestRoutes); 
+app.use('/requests', requestRoutes);     // Fallback: Kahit walang /api sa frontend, gagana na ito
 
 // Documentation
 setupSwagger(app);

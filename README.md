@@ -181,9 +181,29 @@ DELETE | /api/requests/:id | Delete Request |
 
 ---
 
+
 ## 7. Screenshots
 
-See screenshots/ folder for UI and API testing screenshots.
+### UI Screenshots
+
+| Page | Description | Preview |
+| :--- | :--- | :--- |
+| Signin Page | Signin page for users and admin | ![Signin](screenshots/signin.png) |
+| Register | Page where users can register or create account | ![Register](screenshots/register.png) |
+| Admin Dashboard | Admin dashboard showing request status history of the students and analytics | ![Admin Dashboard](screenshots/admin-dashboard.png) |
+| User Dashboard | User dashboard showing their own request history | ![User Dashboard](screenshots/admin-dashboard.png) |
+| Manage Request | Manage Request showing how can admin manage every request | ![Manage Request](screenshots/manage-request.png) | ![Manage Request](screenshots/manage-request.2.png) |
+| New Request | This where user can add new request | ![New Request](screenshots/new-request.png) |
+| My Request | This is where user can see the progress and status of their request | ![My Request](screenshots/my-request.png) |
+
+
+### API Testing Screenshots
+
+| Page | Description | Preview |
+| :--- | :--- | :--- |
+| Admin Post/api/auth/login | Api login testing for admin | ![Home](screenshots/admin-login.png) |
+| User Post/api/auth/login | Api login testing for user | ![Register](screenshots/user-login.png) |
+| Register Post/api/auth/register | Api register testing | ![Login](screenshots/user-register.png) |
 
 ---
 

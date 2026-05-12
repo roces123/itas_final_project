@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://itas-final-project.onrender.com', // replace with your actual deployed backend URL
+  apiUrl: 'https://itas-final-project.onrender.com/api', // replace with your actual deployed backend URL
   firebase: {
     apiKey: "AIzaSyDfX6iUPJE2lFUbEDElEQychLifi0oEmUg",
     authDomain: "delmo-bd4bd.firebaseapp.com",

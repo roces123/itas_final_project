@@ -11,7 +11,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  private apiUrl = environment.apiUrl;
+  private apiUrl = `${environment.apiUrl}/auth`;
 
   register(userData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, userData);

@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-    apiUrl: 'https://itas-final-project.onrender.com',
+    apiUrl: 'https://itas-final-project.onrender.com/api',
     firebase: {
     apiKey: "AIzaSyDfX6iUPJE2lFUbEDElEQychLifi0oEmUg",
     authDomain: "delmo-bd4bd.firebaseapp.com",

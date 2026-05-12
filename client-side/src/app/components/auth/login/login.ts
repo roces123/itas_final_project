@@ -59,7 +59,7 @@ export class Login implements OnInit {
 
       const fbToken = await userCredential.user.getIdToken();
 
-      this.http.post(`${environment.apiUrl}/api/auth/login`, {
+      this.http.post(`${environment.apiUrl}/auth/login`, {
         token: fbToken
       }).subscribe({
         next: (res: any) => {

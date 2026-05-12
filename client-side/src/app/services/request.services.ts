@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
 })
 export class RequestService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl.replace('/auth', '')}/requests`;
+  private apiUrl = `${environment.apiUrl}/requests`;
 
   submitRequest(data: any): Observable<any> {
     const completePayload = {
@@ -21,7 +21,6 @@ export class RequestService {
     return this.http.post(this.apiUrl, completePayload);
   }
 
-  // FIXED: Tinanggal ang '/student' para mag-match sa backend route
   updateStudentRequest(id: string, data: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, data);
   }
